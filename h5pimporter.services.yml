@@ -1,0 +1,6 @@
+services:
+  h5pimporter.csv_parser:
+    class: Drupal\h5pimporter\Service\CsvParser
+  plugin.manager.h5p_content_type:
+    class: Drupal\h5pimporter\Plugin\H5pContentType\H5pContentTypeManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
