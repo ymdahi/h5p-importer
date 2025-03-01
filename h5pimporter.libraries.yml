@@ -1,0 +1,11 @@
+csv_preview:
+  version: 1.x
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js:
+      type: external
+      minified: true
+    js/csv_preview.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

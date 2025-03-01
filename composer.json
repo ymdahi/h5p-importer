@@ -1,0 +1,26 @@
+{
+  "name": "ymdahi/h5p-importer",
+  "type": "drupal-module",
+  "description": "This module allows you to import and convert quizzes from your LMS into H5P",
+  "homepage": "https://github.com/ymdahi/h5p-importer",
+  "authors": [
+    {
+      "name": "Yasin Dahi",
+      "homepage": "https://github.com/ymdahi",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/ymdahi/h5p-importer/issues",
+    "source": "https://github.com/ymdahi/h5p-importer"
+  },
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^10.3",
+    "drupal/h5p": "dev-2.0.x"
+  },
+  "require-dev": {
+    "jangregor/phpstan-prophecy": "^1.0"
+  }
+}

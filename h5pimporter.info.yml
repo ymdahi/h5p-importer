@@ -1,0 +1,7 @@
+name: 'H5P Importer'
+type: module
+description: 'Creates H5P quiz content from an LMS export by importing questions and answers.'
+core_version_requirement: ^10
+package: H5P
+dependencies:
+  - h5p

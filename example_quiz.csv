@@ -1,0 +1,5 @@
+question,answers,correct_answer,feedback
+What is 2+2?,"4|3|5|6",1,"2+2 equals 4."
+What is the capital of France?,"Paris|London|Berlin|Madrid",1,"Paris is the capital of France."
+Which planet is known as the Red Planet?,"Earth|Mars|Jupiter|Venus",2,"Mars is known as the Red Planet."
+Is the sky blue?,"True|False",1,"The sky appears blue due to Rayleigh scattering."

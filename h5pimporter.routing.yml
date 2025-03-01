@@ -1,0 +1,7 @@
+h5pimporter.upload:
+  path: '/h5p-importer'
+  defaults:
+    _form: '\Drupal\h5pimporter\Form\H5pImporterForm'
+    _title: 'Import H5P Quiz from CSV'
+  requirements:
+    _permission: 'access editor'
