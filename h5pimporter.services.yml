@@ -4,3 +4,13 @@ services:
   plugin.manager.h5p_content_type:
     class: Drupal\h5pimporter\Plugin\H5pContentType\H5pContentTypeManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  h5pimporter.creator:
+    class: Drupal\h5pimporter\Service\H5pCreatorService
+    arguments: 
+      - '@h5pimporter.csv_parser'
+      - '@plugin.manager.h5p_content_type'
+      - '@entity_type.manager'
+      - '@database'
+      - '@logger.factory'
+      - '@current_user'
+      - '@language_manager'
