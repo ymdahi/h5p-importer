@@ -17,6 +17,9 @@ class H5pCreatorService {
 
   /**
    * The CSV parser service.
+   * @param array $extra_node_fields
+   *   (optional) Associative array of additional node field values to apply to
+   *   the created H5P node, keyed by field machine name.
    *
    * @var \Drupal\h5pimporter\Service\CsvParser
    */
@@ -111,6 +114,13 @@ class H5pCreatorService {
    *   The H5P content type plugin ID (default: 'questionset').
    * @param int $user_id
    *   The user ID to attribute the content to (default: current user).
+   * @param string $source_url
+   *   The URL of the node from which the CSV data was sourced (optional).
+   * @param string $author_name
+   *   The name of the original author (optional).
+   * @param array $extra_node_fields
+   *   (optional) Associative array of additional node field values to apply to
+   *   the created H5P node, keyed by field machine name.
    *
    * @return array
    *   An array containing the created node and H5P content entity IDs.
@@ -119,14 +129,14 @@ class H5pCreatorService {
    * @throws \Exception
    *   Throws exception if content creation fails.
    */
-  public function createFromCsvContent($csv_content, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL) {
+  public function createFromCsvContent($csv_content, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL, $source_url = NULL, $author_name = NULL, array $extra_node_fields = []) {
     // Parse CSV content
     $rows = $this->csvParser->parseFileData($csv_content);
     if (empty($rows)) {
       throw new \Exception('No valid data found in CSV content');
     }
 
-    return $this->createFromRows($rows, $title, $h5p_type, $user_id);
+    return $this->createFromRows($rows, $title, $h5p_type, $user_id, $source_url, $author_name, $extra_node_fields);
   }
 
   /**
@@ -140,6 +150,10 @@ class H5pCreatorService {
    *   The H5P content type plugin ID (default: 'questionset').
    * @param int $user_id
    *   The user ID to attribute the content to (default: current user).
+   * @param string $source_url
+   *   The URL of the node from which the CSV data was sourced (optional).
+   * @param string $author_name
+   *   The name of the original author (optional).
    *
    * @return array
    *   An array containing the created node and H5P content entity IDs.
@@ -148,7 +162,7 @@ class H5pCreatorService {
    * @throws \Exception
    *   Throws exception if content creation fails.
    */
-  public function createFromRows(array $rows, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL) {
+  public function createFromRows(array $rows, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL, $source_url = NULL, $author_name = NULL, array $extra_node_fields = []) {
     // Get user
     if ($user_id === NULL) {
       $user_id = $this->currentUser->id();
@@ -175,10 +189,10 @@ class H5pCreatorService {
       'library'         => $library_name,
       'parameters'      => $json_content,
       'language'        => $this->languageManager->getCurrentLanguage()->getId(),
-      'authors'         => json_encode([['name' => $user->getDisplayName(), 'role' => 'Author']]),
+      'authors'         => json_encode([['name' => $author_name ?: $user->getDisplayName(), 'role' => 'Author']]),
       'license'         => 'CC BY',
       'license_version' => '4.0',
-      'license_extras'  => 'Created programmatically via H5P Importer service.',
+      'license_extras'  => 'Initial content generated via AI prompt by ' . ($author_name ? $author_name : '') . ($source_url ? ' - ' . $source_url : '.'),
     ];
 
     // Get the library ID
@@ -222,6 +236,14 @@ class H5pCreatorService {
         'title' => $title,
         'uid'   => $user_id,
       ]);
+
+      // Apply any extra field values supplied for the node, matching fields
+      // that exist on the H5P node bundle.
+      foreach ($extra_node_fields as $field_name => $field_value) {
+        if ($node->hasField($field_name)) {
+          $node->set($field_name, $field_value);
+        }
+      }
       $node->set('field_h5p', $h5p_content->id());
       $node->save();
 
@@ -252,6 +274,10 @@ class H5pCreatorService {
    *   The H5P content type plugin ID (default: 'questionset').
    * @param int $user_id
    *   The user ID to attribute the content to (default: current user).
+   * @param string $source_url
+   *   The URL of the node from which the CSV data was sourced (optional).
+   * @param string $author_name
+   *   The name of the original author (optional).
    *
    * @return array
    *   An array containing the created node and H5P content entity IDs.
@@ -260,7 +286,7 @@ class H5pCreatorService {
    * @throws \Exception
    *   Throws exception if file doesn't exist or content creation fails.
    */
-  public function createFromCsvFile($file_path, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL) {
+  public function createFromCsvFile($file_path, $title = 'Imported Quiz', $h5p_type = 'questionset', $user_id = NULL, $source_url = NULL, $author_name = NULL, array $extra_node_fields = []) {
     if (!file_exists($file_path)) {
       throw new \Exception("CSV file not found: $file_path");
     }
@@ -270,6 +296,6 @@ class H5pCreatorService {
       throw new \Exception("Could not read CSV file: $file_path");
     }
 
-    return $this->createFromCsvContent($csv_content, $title, $h5p_type, $user_id);
+    return $this->createFromCsvContent($csv_content, $title, $h5p_type, $user_id, $source_url, $author_name, $extra_node_fields);
   }
 }

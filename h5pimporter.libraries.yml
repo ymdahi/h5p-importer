@@ -9,3 +9,9 @@ csv_preview:
     - core/drupal
     - core/jquery
     - core/once
+
+create_button:
+  version: 1.x
+  css:
+    theme:
+      css/create-button.css: {}

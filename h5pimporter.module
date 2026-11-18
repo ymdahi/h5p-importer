@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for H5P Importer module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function h5pimporter_entity_extra_field_info() {
+  $extra = [];
+  
+  // Add a pseudo-field to the Quiz node type
+  $extra['node']['quiz']['display']['h5p_create_button'] = [
+    'label' => t('Create H5P Quiz button'),
+    'description' => t('Button to create an H5P quiz from this quiz'),
+    'weight' => 10,
+    'visible' => TRUE,
+  ];
+  
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function h5pimporter_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  // Only proceed for Quiz content type
+  if ($entity->bundle() !== 'quiz') {
+    return;
+  }
+  
+  // Check if our extra field is configured to be displayed
+  if ($display->getComponent('h5p_create_button')) {
+    // Build the button render array
+    $url = Url::fromRoute('h5pimporter.create_from_quiz', ['node' => $entity->id()]);
+    
+    $build['h5p_create_button'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['h5p-create-button-wrapper'],
+      ],
+      'button' => [
+        '#type' => 'link',
+        '#title' => t('Create H5P Quiz'),
+        '#url' => $url,
+        '#attributes' => [
+          'class' => ['button', 'button--primary', 'button--create-h5p'],
+        ],
+      ],
+      '#cache' => [
+        'tags' => $entity->getCacheTags(),
+        'contexts' => ['user.permissions'],
+      ],
+      '#attached' => [
+        'library' => ['h5pimporter/create_button'],
+      ],
+    ];
+  }
+}

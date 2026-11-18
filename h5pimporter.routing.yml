@@ -5,3 +5,16 @@ h5pimporter.upload:
     _title: 'Import H5P Quiz from CSV'
   requirements:
     _permission: 'access editor'
+
+h5pimporter.create_from_quiz:
+  path: '/node/{node}/create-h5p-quiz'
+  defaults:
+    _controller: '\Drupal\h5pimporter\Controller\QuizToH5pController::createFromQuiz'
+    _title: 'Create H5P Quiz'
+  requirements:
+    _permission: 'access h5p editor'
+    node: '\d+'
+  options:
+    parameters:
+      node:
+        type: entity:node

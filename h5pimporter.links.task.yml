@@ -1,0 +1,7 @@
+h5pimporter.create_h5p_quiz:
+  route_name: h5pimporter.create_from_quiz
+  title: 'Create H5P Quiz'
+  base_route: entity.node.canonical
+  weight: 100
+  appears_on:
+    - entity.node.canonical

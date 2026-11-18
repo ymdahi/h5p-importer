@@ -1,0 +1,20 @@
+.h5p-create-button-wrapper {
+  margin: 1em 0;
+}
+
+.button--create-h5p {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #0071b8;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.button--create-h5p:hover {
+  background-color: #004c7f;
+  text-decoration: none;
+  color: white;
+}
